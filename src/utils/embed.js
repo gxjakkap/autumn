@@ -29,13 +29,27 @@ exports.queueLists = (queue) => {
     queue.forEach(track => {
         fields.push({name: i.toString(), value: track.title})
         i++
-        console.log(queue[i-1])
     })
+
+    let hasMore = false
+    let hiddenAmount = 0
+
+    if (fields.length > 25){
+        hiddenAmount = fields.length - 25
+        fields = fields.slice(0, 24)
+        hasMore = true
+    }
+        
 
     console.log(fields)
     const msg = new EmbedBuilder()
         .setColor(accentColor)
         .setTitle("Tracks in queue")
         .addFields(fields)
+
+    if (hasMore){
+        msg.setFooter({text: `and ${hiddenAmount} more...`})
+    }    
+
     return msg
 }
