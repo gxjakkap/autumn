@@ -1,12 +1,23 @@
 const { EmbedBuilder } = require("discord.js")
 const { accentColor } = require("../../config.json")
 
-exports.nowPlayingMessage = (trackName, sourceName, imgUrl, duration) => {
-    const fields = [
+exports.nowPlayingMessage = (trackName, sourceName, imgUrl, duration, requestedBy, url) => {
+    let sourceType = "Author"
+
+    // most of the times the song is posted on music lable's channel so it's not the artist name
+    if (url.includes("youtu.be")){
+        sourceType = "Channel"
+    }
+
+    let fields = [
         {name: "Track Name", value: trackName},
-        {name: "Author / Source", value: sourceName},
-        {name: "Duration", value: duration},
+        {name: sourceType, value: sourceName},
     ]
+
+    // spotify doesn't provide duration info
+    if (duration!=="0:00") fields.push({name: "Duration", value: duration})
+
+    fields.push({name: "Requested by", value: `<@${requestedBy}>`})
     const msg = new EmbedBuilder()
         .setColor(accentColor)
         .setTitle("Now Playing")

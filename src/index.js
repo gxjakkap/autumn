@@ -35,7 +35,7 @@ player.on("connectionError", (queue, err) => {
 })
 
 player.on("trackStart", (queue, track) => {
-    queue.metadata.channel.send({embeds: [nowPlayingMessage(track.title, track.author, track.thumbnail, track.duration)]})
+    queue.metadata.channel.send({embeds: [nowPlayingMessage(track.title, track.author, track.thumbnail, track.duration, track.requestedBy.id, track.url)]})
 })
 
 
@@ -130,7 +130,7 @@ client.on(Events.InteractionCreate, async interaction => {
 	try {
 		await command.execute(interaction, player);
 	} catch (error) {
-		console.error(error);
+		console.log(error);
 		await interaction.channel.send({ content: 'There was an error while executing this command!', ephemeral: true });
 	}
 });
