@@ -20,7 +20,7 @@ exports.nowPlayingMessage = (trackName, sourceName, imgUrl, duration, requestedB
     fields.push({name: "Requested by", value: `<@${requestedBy}>`})
     const msg = new EmbedBuilder()
         .setColor(accentColor)
-        .setTitle("Now Playing")
+        .setTitle("Now Playing▶️🎶")
         .setImage(imgUrl)
         .addFields(fields)
     return msg
