@@ -8,10 +8,10 @@ module.exports = {
     async execute(interaction, player) {
         await interaction.deferReply() //reply with "bot is thinking..." interface
         if (!interaction.member.voice.channelId) {
-            return await interaction.editReply({content: "You're not in a vc!", ephemeral: true})
+            return await interaction.editReply({content: "🔇|You're not in a vc!", ephemeral: true})
         }
         if (interaction.guild.members.me.voice.channelId && interaction.member.voice.channelId !== interaction.guild.members.me.voice.channelId) {
-            return await interaction.editReply({ content: "You're not in my voice channel!", ephemeral: true })
+            return await interaction.editReply({ content: "🔇|You're not in my voice channel!", ephemeral: true })
         }
         const query = interaction.options.getString("query");
         const queue = player.createQueue(interaction.guild, {
@@ -29,22 +29,35 @@ module.exports = {
         catch (err) {
             queue.destroy();
             console.log(err)
-            return await interaction.reply({ content: "Could not join your voice channel!", ephemeral: true });
+            return await interaction.reply({ content: "🔇|Could not join your voice channel!", ephemeral: true });
         }
 
         const res = await player.search(query, {
             requestedBy: interaction.user,
-            searchEngine: "test"
+            searchEngine: "customExtractor"
         })
-        if (!res) return await interaction.followUp({ content: `❌ | Track **${query}** not found!` })
+        if (!res || (!res.tracks || res.tracks.length<1)) return await interaction.followUp({ content: `❌ | Track **${query}** not found or not accessible!` })
         
         if (res.playlist){
-            queue.addTracks(res.tracks)
-            await interaction.followUp({ content: `📝 | Added **${res.tracks.length}** tracks from a ${res.playlist.source} playlist **${res.playlist.title}** to queue!`, ephemeral: true })
+            try {
+                queue.addTracks(res.tracks)
+                await interaction.followUp({ content: `📝 | Added **${res.tracks.length}** tracks from a ${res.playlist.source} playlist **${res.playlist.title}** to queue!`, ephemeral: true })
+            }
+            catch (err) {
+                await interaction.deleteReply()
+                throw err
+            }
         }
         else {
-            queue.addTrack(res.tracks[0])
-            await interaction.followUp({ content: `📝 | Added track **${res.tracks[0].title}** to queue!`, ephemeral: true })
+            try{
+                console.log(res)
+                queue.addTrack(res.tracks[0])
+                await interaction.followUp({ content: `📝 | Added track **${res.tracks[0].title}** to queue!`, ephemeral: true })
+            }
+            catch (err) {
+                await interaction.deleteReply()
+                throw err
+            }
         }
 
         if (initialTrack){

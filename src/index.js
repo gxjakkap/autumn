@@ -23,7 +23,7 @@ const player = new Player(client, {
     }
 })
 
-player.use("test", extractor)
+player.use("customExtractor", extractor)
 
 
 // TODO: proper error handling
@@ -131,7 +131,7 @@ client.on(Events.InteractionCreate, async interaction => {
 		await command.execute(interaction, player);
 	} catch (error) {
 		console.error(error);
-		await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+		await interaction.channel.send({ content: 'There was an error while executing this command!', ephemeral: true });
 	}
 });
 

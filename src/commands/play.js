@@ -1,9 +1,9 @@
 exports.run = (client, message, args, player) => {
     if (!message.member.voice.channelId) {
-        return message.reply("You're not in a vc!")
+        return message.reply("🔇|You're not in a vc!")
     }
     if (message.guild.members.me.voice.channelId && message.member.voice.channelId !== message.guild.members.me.voice.channelId) {
-        return message.reply("You're not in my voice channel!")
+        return message.reply("🔇|You're not in my voice channel!")
     }
     const query = args.join(" ");
     const queue = player.createQueue(message.guild, {
@@ -11,23 +11,44 @@ exports.run = (client, message, args, player) => {
             channel: message.channel
         }
     })
+    let initialTrack
     try {
-        if (!queue.connection) queue.connect(message.member.voice.channel);
+        if (!queue.connection) {
+            initialTrack = true
+            queue.connect(message.member.voice.channel)
+        }
     }
     catch (err) {
         queue.destroy()
         console.log(err)
-        return message.reply("Could not join your voice channel!")
+        return message.reply("🔇|Could not join your voice channel!")
     }
-    player.search(query, {requestedBy: message.author})
-    .then(x => {
-        const track = x.tracks[0]
-        if (!track){
-            message.channel.send({ content: `❌ | Track **${query}** not found!` })
-            return
+    player.search(query, {requestedBy: message.author, searchEngine: "customExtractor"})
+    .then(res => {
+        if (!res || (!res.tracks || res.tracks.length<1)) return message.reply({ content: `❌ | Track **${query}** not found or not accessible!` })
+
+        if (res.playlist){
+            try {
+                queue.addTracks(res.tracks)
+                message.reply({ content: `📝 | Added **${res.tracks.length}** tracks from a ${res.playlist.source} playlist **${res.playlist.title}** to queue!`, ephemeral: true })
+            }
+            catch (err) {
+                throw err
+            }
         }
-        queue.play(track)
-        return message.channel.send(`📝 | Added track **${track.title}** to queue!`)
+        else {
+            try{
+                queue.addTrack(res.tracks[0])
+                message.reply({ content: `📝 | Added track **${res.tracks[0].title}** to queue!`, ephemeral: true })
+            }
+            catch (err) {
+                throw err
+            }
+        }
+
+        if (initialTrack){
+            queue.play()
+        }
     })    
 }
 
