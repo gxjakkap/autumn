@@ -1,4 +1,4 @@
-const { queueLists } = require("../utils/embed")
+const { currentlyPlaying } = require("../utils/embed")
 
 exports.run = (client, message, args, player) => {
     if (!message.member.voice.channelId) {
@@ -10,9 +10,9 @@ exports.run = (client, message, args, player) => {
 
     const queue = player.getQueue(message.guild)
 
-    return message.reply({embeds: [queueLists(queue.tracks, queue)]})
+    return message.reply({embeds: [currentlyPlaying(queue.nowPlaying(), queue.createProgressBar())]})
 }
 
-exports.name = "queue"
-exports.aliases = ["q", "list"]
-exports.desc = "Return play queue for this server."
+exports.name = "nowplaying"
+exports.aliases = ["np", "current"]
+exports.desc = "Return track currently playing."

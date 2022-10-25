@@ -20,7 +20,7 @@ exports.nowPlayingMessage = (trackName, sourceName, imgUrl, duration, requestedB
     fields.push({name: "Requested by", value: `<@${requestedBy}>`})
     const msg = new EmbedBuilder()
         .setColor(accentColor)
-        .setTitle("Now Playing▶️🎶")
+        .setTitle("Now Playing ▶️🎶")
         .setImage(imgUrl)
         .addFields(fields)
     return msg
@@ -30,7 +30,7 @@ exports.queueLists = (queue, queueObject) => {
     if (!queue || queue.length === 0){
         const msg = new EmbedBuilder()
             .setColor(accentColor)
-            .setTitle("Tracks in queue")
+            .setTitle("Tracks in queue 🗒️")
             .addFields([{name: "Queue's empty", value: "🫙"}])
         return msg
     }
@@ -60,5 +60,20 @@ exports.queueLists = (queue, queueObject) => {
         msg.setFooter({text: `and ${hiddenAmount} more...`})
     }    
 
+    return msg
+}
+
+exports.currentlyPlaying = (track, progressBar) => {
+    let fields = [
+        {name: "Track Name", value: track.title},
+        {name: "Requested by", value: `@<${track.requestedBy.id}>`},
+        {name: "Duration", value: progressBar},
+    ]
+
+    const msg = new EmbedBuilder()
+        .setColor(accentColor)
+        .setTitle("Currently Playing 🎶")
+        .addFields(fields)
+    
     return msg
 }
