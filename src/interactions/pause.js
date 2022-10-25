@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require("discord.js")
+const { SlashCommandBuilder } = require("discord.js")
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -21,25 +21,6 @@ module.exports = {
 
         queue.setPaused(true)
 
-        const row = new ActionRowBuilder()
-			.addComponents(
-				new ButtonBuilder()
-					.setCustomId('primary')
-					.setLabel('Resume')
-					.setStyle(ButtonStyle.Primary),
-			);
-
-        const collector = message.createMessageComponentCollector({ componentType: ComponentType.Button, time: 15000 });
-
-        collector.on('collect', i => {
-            if (!queue.playing){
-                i.followUp({ content: "Already playing!", ephemeral: true })
-                return
-            }
-            queue.setPaused(false)
-            i.update({content: "⏯️| Player resumed.", components: []})
-        });
-
-        return await interaction.reply({ content: "⏸️| Player paused.", components: [row]  })
+        return await interaction.reply({ content: "⏸️| Player paused." })
     }
 }
