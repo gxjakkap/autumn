@@ -66,7 +66,7 @@ exports.queueLists = (queue, queueObject) => {
 exports.currentlyPlaying = (track, progressBar) => {
     let fields = [
         {name: "Track Name", value: track.title},
-        {name: "Requested by", value: `@<${track.requestedBy.id}>`},
+        {name: "Requested by", value: `<@${track.requestedBy.id}>`},
         {name: "Duration", value: progressBar},
     ]
 
