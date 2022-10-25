@@ -25,6 +25,8 @@ const player = new Player(client, {
 
 player.use("test", extractor)
 
+
+// TODO: proper error handling
 player.on("error", (queue, err) => {
     console.log(err)
 })

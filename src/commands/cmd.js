@@ -20,7 +20,6 @@ for (const file of commands) {
     const command = require(`./${file}`);
     commandCollections.push({name: commandName, desc: command.desc})
 }
-console.log(commandCollections)
 
 exports.run = (client, message, args, player) => {
     let pmsg = ''
