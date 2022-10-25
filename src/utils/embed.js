@@ -38,16 +38,16 @@ exports.queueLists = (queue) => {
     let fields = []
     let i = 1
     queue.forEach(track => {
-        fields.push({name: i.toString(), value: track.title})
+        fields.push({name: i.toString(), value: `${track.title} <@${track.requestedBy.id}>`})
         i++
     })
 
     let hasMore = false
     let hiddenAmount = 0
 
-    if (fields.length > 25){
-        hiddenAmount = fields.length - 25
-        fields = fields.slice(0, 24)
+    if (fields.length > 10){
+        hiddenAmount = fields.length - 10
+        fields = fields.slice(0, 9)
         hasMore = true
     }
         
