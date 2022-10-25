@@ -26,7 +26,7 @@ exports.nowPlayingMessage = (trackName, sourceName, imgUrl, duration, requestedB
     return msg
 }
 
-exports.queueLists = (queue) => {
+exports.queueLists = (queue, queueObject) => {
     if (!queue || queue.length === 0){
         const msg = new EmbedBuilder()
             .setColor(accentColor)
@@ -36,10 +36,8 @@ exports.queueLists = (queue) => {
     }
 
     let fields = []
-    let i = 1
     queue.forEach(track => {
-        fields.push({name: i.toString(), value: `${track.title} <@${track.requestedBy.id}>`})
-        i++
+        fields.push({name: (queueObject.getTrackPosition(track) + 1).toString(), value: `${track.title} <@${track.requestedBy.id}>`})
     })
 
     let hasMore = false
