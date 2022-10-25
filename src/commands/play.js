@@ -1,3 +1,5 @@
+const { getSourceName } = require("../utils/mini")
+
 exports.run = (client, message, args, player) => {
     if (!message.member.voice.channelId) {
         return message.reply("🔇|You're not in a vc!")
@@ -30,7 +32,7 @@ exports.run = (client, message, args, player) => {
         if (res.playlist){
             try {
                 queue.addTracks(res.tracks)
-                message.reply({ content: `📝 | Added **${res.tracks.length}** tracks from a ${res.playlist.source} playlist **${res.playlist.title}** to queue!`, ephemeral: true })
+                message.reply({ content: `📝 | Added **${res.tracks.length}** tracks from a ${getSourceName(res.playlist.source)} playlist **${res.playlist.title}** to queue!`, ephemeral: true })
             }
             catch (err) {
                 throw err

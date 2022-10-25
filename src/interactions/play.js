@@ -1,4 +1,5 @@
 const { SlashCommandBuilder } = require("discord.js")
+const { getSourceName } = require("../utils/mini")
 
 module.exports = {
     data: new SlashCommandBuilder()
