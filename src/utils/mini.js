@@ -10,3 +10,14 @@ exports.getSourceName = (sourceType) => {
             return sourceType
     }
 }
+
+exports.queueInitOption = (channel) => {
+    return {
+        metadata: {
+            channel: channel
+        },
+        leaveOnEmpty: true,
+        leaveOnEnd: true,
+        leaveOnEndCooldown: 300000
+    }
+}

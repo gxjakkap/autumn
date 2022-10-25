@@ -1,4 +1,4 @@
-const { getSourceName } = require("../utils/mini")
+const { getSourceName, queueInitOption } = require("../utils/mini")
 
 exports.run = (client, message, args, player) => {
     if (!message.member.voice.channelId) {
@@ -8,11 +8,7 @@ exports.run = (client, message, args, player) => {
         return message.reply("🔇|You're not in my voice channel!")
     }
     const query = args.join(" ");
-    const queue = player.createQueue(message.guild, {
-        metadata: {
-            channel: message.channel
-        }
-    })
+    const queue = player.createQueue(message.guild, queueInitOption(message.channel))
     let initialTrack
     try {
         if (!queue.connection) {

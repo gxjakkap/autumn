@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require("discord.js")
-const { getSourceName } = require("../utils/mini")
+const { getSourceName, queueInitOption } = require("../utils/mini")
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -15,11 +15,7 @@ module.exports = {
             return await interaction.editReply({ content: "🔇|You're not in my voice channel!", ephemeral: true })
         }
         const query = interaction.options.getString("query");
-        const queue = player.createQueue(interaction.guild, {
-            metadata: {
-                channel: interaction.channel
-            }
-        })
+        const queue = player.createQueue(interaction.guild, queueInitOption(interaction.channel))
         let initialTrack
         try {
             if (!queue.connection) {
@@ -42,7 +38,7 @@ module.exports = {
         if (res.playlist){
             try {
                 queue.addTracks(res.tracks)
-                await interaction.followUp({ content: `📝 | Added **${res.tracks.length}** tracks from a ${res.playlist.source} playlist **${res.playlist.title}** to queue!`, ephemeral: true })
+                await interaction.followUp({ content: `📝 | Added **${res.tracks.length}** tracks from a ${getSourceName(res.playlist.source)} playlist **${res.playlist.title}** to queue!`, ephemeral: true })
             }
             catch (err) {
                 await interaction.deleteReply()
