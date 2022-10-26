@@ -9,8 +9,11 @@ exports.run = (client, message, args, player) => {
     }
 
     const queue = player.getQueue(message.guild)
-
-    return message.reply({embeds: [currentlyPlaying(queue.nowPlaying(), queue.createProgressBar())]})
+    const nowPlaying = queue.nowPlaying()
+    if (!nowPlaying){
+        return message.reply({ content: `❌ | There's no track playing.` })
+    }
+    return message.reply({embeds: [currentlyPlaying(nowPlaying, queue.createProgressBar())]})
 }
 
 exports.name = "nowplaying"

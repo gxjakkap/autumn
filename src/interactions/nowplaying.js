@@ -16,6 +16,11 @@ module.exports = {
 
         const queue = player.getQueue(interaction.guild)
 
-        return await interaction.reply({embeds: [currentlyPlaying(queue.nowPlaying(), queue.createProgressBar())]})
+        const nowPlaying = queue.nowPlaying()
+        if (!nowPlaying){
+            return await interaction.reply({ content: `❌ | There's no track playing.` })
+        }
+
+        return await interaction.reply({embeds: [currentlyPlaying(nowPlaying, queue.createProgressBar())]})
     }
 }

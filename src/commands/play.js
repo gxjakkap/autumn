@@ -23,8 +23,12 @@ exports.run = (client, message, args, player) => {
     }
     player.search(query, {requestedBy: message.author, searchEngine: "customExtractor"})
     .then(res => {
-        if (!res || (!res.tracks || res.tracks.length<1)) return message.reply({ content: `❌ | Track **${query}** not found or not accessible!` })
-
+        if (!res || (!res.tracks || res.tracks.length<1)) {
+            if ((!queue.tracks || queue.tracks.length < 1) && (!queue.nowPlaying())){
+                queue.destroy()
+            }
+            return message.reply({ content: `❌ | Track **${query}** not found or not accessible!` })
+        }
         if (res.playlist){
             try {
                 queue.addTracks(res.tracks)
